@@ -1,18 +1,4 @@
-class Dictionary {
-  constructor() {
-    this.items = {};
-  }
-  get(key) {
-    return this.has(key) ? this.items[key] : undefined;
-  }
-  set(key, value) {
-    this.items[key] = value;
-  }
-  has(key) {
-    return key in this.items;
-  }
-}
-
+var Dictionary = require('../Dictionary/Dictionary');
 class Graph {
   constructor() {
     this.vertices = []; // 节点集合
@@ -56,7 +42,7 @@ class Graph {
   }
   // 广度优先遍历
   bfs(v, callback) {
-    var color = initializeColor(),
+    var color = this.initializeColor(),
       queue = new Queue();
 
     queue.enqueue(v); // 入队了就设置为黑色
@@ -105,5 +91,7 @@ let bfsList = [];
 graph.dfs(graph.vertices[0], function(u) {
   bfsList.push(u);
 });
-
+graph.bfs(graph.vertices[0], function(u) {
+  bfsList.push(u);
+});
 console.log(bfsList);
