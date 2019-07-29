@@ -1,4 +1,4 @@
-var Dictionary = require('../Dictionary/Dictionary');
+var Dictionary = require("../Dictionary/Dictionary");
 class Graph {
   constructor() {
     this.vertices = []; // 节点集合
@@ -50,7 +50,7 @@ class Graph {
 
     while (!queue.isEmpty()) {
       var u = queue.dequeue(), // 出队重复第一步
-      neighbors = adjList.get(u);
+        neighbors = adjList.get(u);
 
       for (var i = 0; i < neighbors.length; i++) {
         // 将所有相邻顶点入队
