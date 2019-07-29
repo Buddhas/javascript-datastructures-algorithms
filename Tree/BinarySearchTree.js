@@ -1,10 +1,11 @@
+let Stack = require('./../Stack/Stack');
 class BinarySearchTree {
     constructor (root = null) {
         this.root = root
     }
     // 插入操作
     insertNode(root = this.root, newNode) {
-        if (root.val <= newNode.val) {
+        if (root.val > newNode.val) {
             if (root.left == null) {
                 root.left = newNode
             } else {
@@ -19,7 +20,7 @@ class BinarySearchTree {
         }
     }
     // 对外暴露插入接口
-    inser(val) {
+    insert(val) {
         let node = new Node(val)
         if (this.root == null) {
             root = node
@@ -30,9 +31,9 @@ class BinarySearchTree {
     // 前序遍历
     preOrderTraverseNode(node, callback) {
         if (node !== null) {
-            callback(node.key);
-            preOrderTraverseNode(node.left, callback);
-            preOrderTraverseNode(node.right, callback);
+            callback(node.val);
+            this.preOrderTraverseNode(node.left, callback);
+            this.preOrderTraverseNode(node.right, callback);
         }
     }
     // 前序遍历对外暴露接口
@@ -42,9 +43,9 @@ class BinarySearchTree {
     // 中序遍历
     inOrderTraverseNode(node, callback) {
         if (node !== null) {
-            preOrderTraverseNode(node.left, callback);
-            callback(node.key);
-            preOrderTraverseNode(node.right, callback);
+            this.inOrderTraverseNode(node.left, callback);
+            callback(node.val);
+            this.inOrderTraverseNode(node.right, callback);
         }
     }
     // 中序遍历对外接口
@@ -54,9 +55,9 @@ class BinarySearchTree {
     // 后序遍历
     postOrderTraverseNode(node, callback) {
         if (node !== null) {
-            preOrderTraverseNode(node.left, callback);
-            preOrderTraverseNode(node.right, callback);
-            callback(node.key);
+            this.postOrderTraverseNode(node.left, callback);
+            this.postOrderTraverseNode(node.right, callback);
+            callback(node.val);
         }
     }
     // 后续遍历接口
@@ -64,33 +65,37 @@ class BinarySearchTree {
         this.postOrderTraverseNode(this.root, callback)
     }
     // 查找节点
-    searchNode(node, key) {
+    searchNode(node, val) {
         if (!node) {
             return false
         } else {
-            if (node.val < key) {
-                this.searchNode(node.right, key)
-            } else if (node.val > key) {
-                this.searchNode(node.left, key)
+            if (node.val < val) {
+                this.searchNode(node.right, val)
+            } else if (node.val > val) {
+                this.searchNode(node.left, val)
             } else {
                 return true
             }
         }
     }
     // 对外暴露查找接口
-    search(key) {
-        return this.searchNode(this.root, key)
+    search(val) {
+        return this.searchNode(this.root, val)
+    }
+    // 对外暴露移除接口
+    remove(val) {
+        this.removeNode(this.root, val)
     }
     // 移除接口
-    removeNode(node, key) {
+    removeNode(node, val) {
         if(!node) {
             return 
         }
-        if (key < node.val) {
-            node.left = this.removeNode(node.left, key)
+        if (val < node.val) {
+            node.left = this.removeNode(node.left, val)
             return node
-        } else if (key > node.val) {
-            node.right = this.removeNode(node.right, key)
+        } else if (val > node.val) {
+            node.right = this.removeNode(node.right, val)
             return node
         } else {
             if (node.left === null && node.right === null) {
@@ -106,18 +111,109 @@ class BinarySearchTree {
                 node = node.left;
                 return node;
               } else {
-                  var aux = this.findMinNode(node.right)
+                  let aux = this.findMinNode(node.right)
                   node.val = aux.val
                   node.right = this.removeNode(node.right, aux.val)
                   return node
               }
         }
-    },
+    }
+    // 寻找节点
     findMinNode(node) {
         while(node && node.left) {
             node = node.left
         }
         return node
+    }
+    // 最大节点
+    maxNode(node) {
+        if (node) {
+            while(node && node.right !== null) {
+                node = node.right
+            }
+            return node.val
+        }
+        return null
+    }
+    // 最大节点暴露接口
+    max() {
+        return this.maxNode(this.root)
+    }
+    // 最小节点
+    minNode(node) {
+        if (node) {
+            while (node && node.left !== null) {
+              node = node.left;
+            }
+            return node.val;
+          }
+          return null;
+    }
+    // 最小节点暴露接口
+    min() {
+        return this.minNode(this.root)
+    }
+    // 前序遍历非递归实现
+    preOrderTraverseUnRec(callback) {
+        if (this.root) {
+            let stack = new Stack() 
+            stack.push(this.root)
+            while(!stack.isEmpty()) {
+                
+                let node = stack.pop()
+                if (callback) {
+                    callback(node.val)
+                }
+                if (node.right) {
+                    stack.push(node.right)
+                }
+                if (node.left) {
+                    stack.push(node.left)
+                }
+            }
+        }
+    }
+    // 中序遍历非递归实现
+    inOrderTraverseUnRec(callback) {
+        if (this.root !== null) {
+            let stack = new Stack()
+            let node = this.root
+            while(!stack.isEmpty() || node) {
+                if (node != null) {
+                    stack.push(node)
+                    node = node.left
+                } else {
+                    node = stack.pop()
+                    console.log(node)
+                    callback(node)
+                    node = node.right
+                }
+            }
+        }
+    }
+    // 后续遍历非递归实现
+    postOrderTraverseUnRec(callback) {
+        if (this.root) {
+            let stack = new Stack()
+            let outputStack = new Stack()
+            stack.push(this.root)
+            while(!stack.isEmpty()) {
+                let node = stack.pop()
+                outputStack.push(node)
+                if (node.left) {
+                    stack.push(node.left)
+                }
+                if (node.right) {
+                    stack.push(node.right)
+                }
+            }
+            while(!outputStack.isEmpty()) {
+                let node = outputStack.pop()
+                if (callback) {
+                    callback(node.val)
+                }
+            }
+        }
     }
 }
 
@@ -128,3 +224,22 @@ class Node  {
         this.right = right
     }
 } 
+let n1 = new Node(5)
+let binarySearchTree = new BinarySearchTree(n1)
+binarySearchTree.insert(11);
+binarySearchTree.insert(7);
+binarySearchTree.insert(13);
+binarySearchTree.insert(6);
+binarySearchTree.insert(3);
+binarySearchTree.insert(9);
+
+
+
+binarySearchTree.insert(1)
+binarySearchTree.insert(100)
+binarySearchTree.remove(100)
+binarySearchTree.inOrderTraverse(function(val) {
+})
+
+binarySearchTree.inOrderTraverseUnRec(function(val) {
+})
