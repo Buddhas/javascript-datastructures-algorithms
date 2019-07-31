@@ -66,5 +66,24 @@ class linkList {
             }
         }
     }
-    
+    indexOf(val) {
+        let current = this.head
+        let index = 1
+        while(current) {
+            if (val = current.val) {
+                return index
+            }
+            index++
+            current = current.next
+        }
+    }
+    isEmpty() {
+        return this.length == 0
+    }
+    getHead() {
+        return this.head
+    }
+    getLength() {
+        return this.length
+    }
 }
