@@ -3,7 +3,7 @@ class Sort {
         this.arr = []
     }
     // 冒泡排序
-    bubble() {
+    bubbleSort() {
         let temp = -999
         for(let i = 0; i < this.arr.length; i++) {
             for(let j = 0; j < this.arr.length - 1 - i; j++) {
@@ -16,7 +16,7 @@ class Sort {
         }
     }
     // 冒泡排序改进
-    bubbleBetter() {
+    bubbleBetterSort() {
         let temp = -999
         let flag = false // 交换标识
         for(let i = 0; i < this.arr.length; i++) {
@@ -33,7 +33,7 @@ class Sort {
         }
     }
     // 插入排序
-    insert() {
+    insertSort() {
         for(let i = 1; i < this.arr.length; i++) {
             if (this.arr[i - 1] > this.arr[i]) {
                 let j = i 
@@ -47,7 +47,7 @@ class Sort {
         } 
     }
     // 快速排序
-    fast(fastArr = this.arr) {
+    fastSort(fastArr = this.arr) {
         if (fastArr.length == 0) {
             return []
         } else {
@@ -63,5 +63,62 @@ class Sort {
             }
             return this.fast(left).concat(temp, this.fast(right))
         }
+    }
+    // 快速排序第二种写法
+    fast2Sort(fastArr = this.arr, begin, end) {
+        if (begin < end) {
+            let key = fastArr[0]
+            let i = begin
+            let j = end
+            while(i < j) {
+                while(i < j && fastArr[j] > key) {
+                    j--
+                }
+                if (i < j) {
+                    fastArr[i] = fastArr[j]
+                    i++
+                }
+                while(i < j && fastArr[i] < key) {
+                    i++
+                }
+                if (i < j) {
+                    fastArr[j] = fastArr[i]
+                    j--
+                }
+
+            }
+            fastArr[i] = key
+            this.fast2Sort(fastArr, begin, i - 1)
+            this.fast2Sort(fastArr, i + 1, end)
+        }
+
+    }
+    // 归并排序
+    mergeSort(mergeArr = this.arr) {
+        let len = mergeArr.length
+        if (len < 2) {
+            return mergeArr
+        }
+        let middle = Math.floor( len / 2)
+        let left = arr.slice(0, middle)
+        let right = arr.slice(middle)
+        return this.merge(this.mergeSort(left), this.mergeSort(right))
+    }
+    merge(left, right) {
+        let result = []
+        while(left.length > 0 && right.length > 0) {
+            if (left[0] > right[0]) {
+                result.push(right.shift())
+            } else {
+                result.push(left.shift())
+            }
+        }
+        if (left.length > 0) {
+            result.push(...left)
+        }
+        if (right.length > 0) {
+            result.push(...right)
+        }
+        return result
     }
 }
