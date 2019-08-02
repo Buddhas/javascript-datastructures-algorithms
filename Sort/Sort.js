@@ -121,4 +121,42 @@ class Sort {
         }
         return result
     }
+    // 堆排序
+    heapAdjust(elements, pos, len) {
+        let swap = elements[pos]
+
+        let children = pos * 2 + 1
+
+        while(children < len) {
+            if (children + 1 < len && elements[children] < elements[children + 1]) {
+                children += 1
+            }
+            if (elements[pos] < elements[children]) {
+                elements[pos] = elements[children]
+                pos = children
+                children = pos * 2 + 1
+            } else {
+                break
+            }
+            elements[pos] = swap
+        }
+    }
+    // 构建堆
+    buildHeap() {
+        for(let i = this.arr.length / 2; i >= 0; i--) {
+            this.headSort(this.arr, i , this.arr.length)
+        }
+    }
+    // 堆排序
+    headSort() {
+        this.buildHeap()
+        // 从尾部开始进行调整
+        for(let i = this.arr.length - 1; i > 0; i--) {
+            let swap = this.arr[i]
+            this.arr[i] = this.arr[0]
+            arr[0] = swap
+            //进行调整，将最大）元素调整至堆顶
+            headAdjust(arr, 0, i)
+        }
+    }
 }
